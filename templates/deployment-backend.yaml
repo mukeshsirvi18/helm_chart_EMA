@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: {{ .Values.backend.image }}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MYSQL_HOST
+          value: "mysqldb"
+        - name: MYSQL_USER
+          value: "{{ .Values.dependency.mysql.user }}"
+        - name: MYSQL_PASSWORD
+          value: "{{ .Values.dependency.mysql.password }}"
+        - name: MYSQL_DATABASE
+          value: "{{ .Values.dependency.mysql.database }}"
+        - name: MYSQL_PORT
+          value: "3306"
+
